@@ -14,10 +14,13 @@ BOSH_DIR=${BOSH_DIR:-${REPOS_DIR}/bosh}
 
 CF_RELEASE_GIT=${CF_RELEASE_GIT:-https://github.com/cloudfoundry/cf-release.git}
 MICRO_GIT=${MICRO_GIT:-https://github.com/cloudfoundry/micro.git}
+MICRO_BRANCH=${MICRO_BRANCH:-master}
 BOSH_GIT=${BOSH_GIT:-https://github.com/cloudfoundry/bosh.git}
 
 UBUNTU_RELEASE=`lsb_release -c -s`
 UPGRADE=${UPGRADE:-}
+
+MANIFEST=$MICRO_DIR/deploy/intalio.yml
 
 if [[ "$(which ovftool)X" == "X" ]]; then
   echo "Please download ovftool to your local machine, upload to this VM and install; then re-run this script"
@@ -87,11 +90,11 @@ bosh -n --color create release --force --with-tarball
 
 if [[ ! -d ${MICRO_DIR} ]]; then
   echo "Cloning micro repository..."
-  git clone ${MICRO_GIT} ${MICRO_DIR}
+  git clone -b ${MICRO_BRANCH} ${MICRO_GIT} ${MICRO_DIR}
 else
   echo "Updating micro repository..."
   cd ${MICRO_DIR}
-  git pull origin master
+  git pull origin ${MICRO_BRANCH}
 fi
 cd ${MICRO_DIR}/micro
 rm -rf .bundle
