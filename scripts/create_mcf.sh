@@ -82,7 +82,7 @@ cd ${CF_RELEASE_DIR}
 # Remove when https://github.com/cloudfoundry/cf-release/pull/25 gets merged.
 sed -i 's#git@github.com:#https://github.com/#g' .gitmodules
 sed -i 's#git://github.com#https://github.com#g' .gitmodules
-./update
+git submodule foreach --recursive git submodule sync && git submodule update --init --recursive
 bosh -n --color create release --force --with-tarball
 
 if [[ ! -d ${MICRO_DIR} ]]; then
