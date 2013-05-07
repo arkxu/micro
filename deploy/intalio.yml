@@ -11,7 +11,6 @@ jobs:
   - nats
   - router_next
   - dea_next
-  - stager
   - health_manager_next
   - cloud_controller_ng
   - serialization_data_server
@@ -33,7 +32,7 @@ properties:
   dea:
     max_memory: 2048
   dea_next:
-    memory_mb: 4096
+    memory_mb: 2048
     disk_mb: 8192
     num_instances: 16
   router:
@@ -91,7 +90,7 @@ properties:
     shadow_mode: disable
     cc_partition: ng
 
-  cc:
+  cc: &cc
     description: "VMware's Micro Cloud Application Platform"
     srv_api_uri: http://api.vcap.me
     password:
@@ -120,18 +119,18 @@ properties:
       service_lifecycle:
         max_upload_size: 5
     use_nginx: true
-
-  ccng:
     bootstrap_admin_email: micro@vcap.me
-    srv_api_uri: http://ccng.vcap.me
-    external_host: ccng
     uaa_resource_id: cloud_controller
     quota_definitions:
       free:
         total_services: 10
-        free_memory_limit: 4096
-        paid_memory_limit: 4096
+        free_memory_limit: 256
+        paid_memory_limit: 1024
     admins:
+    db_encryption_key: "secret"
+
+  ccng: *cc
+
   mysql_gateway:
     ip_route: 127.0.0.1
     token:
@@ -314,7 +313,7 @@ properties:
             serialization: enable
             snapshot:
               quota: 1
-            worker_count: 1
+            worker_count: 5
           warden:
             enable: false
     postgresql:
@@ -344,7 +343,7 @@ properties:
             serialization: enable
             snapshot:
               quota: 1
-            worker_count: 1
+            worker_count: 5
           warden:
             enable: false
     mongodb:
@@ -367,7 +366,7 @@ properties:
             serialization: enable
             snapshot:
               quota: 1
-            worker_count: 1
+            worker_count: 5
           warden:
             enable: false
     rabbit:
