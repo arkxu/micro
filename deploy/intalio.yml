@@ -49,15 +49,20 @@ properties:
     address: 127.0.0.1
     port: 4222
 
-  ccdb:
+  ccdb: &ccdb
     template: postgres
+    db_scheme: postgres
     address: 127.0.0.1
     port: 2545
+    pool_size: 10
+    max_connections: 256
     databases:
     - tag: cc
       name: appcloud
+      citext: true
     - tag: uaa
       name: uaa
+      citext: true
     roles:
     - name: root
       password:
@@ -66,25 +71,7 @@ properties:
       password:
       tag: uaa
 
-  ccdb_ng:
-    address: 127.0.0.1
-    port: 2545
-    pool_size: 10
-    max_connections: 256
-    databases:
-    - tag: cc
-      name: appcloud_ng
-      citext: true
-    - tag: uaa
-      name: uaa_ng
-      citext: true
-    roles:
-    - name: root
-      password:
-      tag: admin
-    - name: uaa
-      password:
-      tag: uaa
+  ccdb_ng: *ccdb
 
   health_manager_ccng:
     shadow_mode: disable
@@ -123,12 +110,42 @@ properties:
     uaa_resource_id: cloud_controller
     quota_definitions:
       free:
+        non_basic_services_allowed: true
         total_services: 10
-        free_memory_limit: 256
-        paid_memory_limit: 1024
+        memory_limit: 4096
+      paid:
+        non_basic_services_allowed: true
+        memory_limit: 10240
+        total_services: -1
+      runaway:
+        non_basic_services_allowed: true
+        memory_limit: 102400
+        total_services: -1
+    default_quota_definition: runaway    
     admins:
     db_encryption_key: "secret"
-
+    uaa_resource_id: cloud_controller
+    resource_pool:
+      minimum_size: 65536
+      maximum_size: 131072
+      resource_directory_key: local-cc-resources
+      fog_connection:
+        provider: Local
+        local_root: /tmp
+    packages:
+      minimum_size: 1048576
+      maximum_size: 2097152
+      app_package_directory_key: local-cc-packages
+      fog_connection:
+        provider: Local
+        local_root: /tmp
+    droplets:
+      minimum_size: 1048576
+      maximum_size: 2097152
+      droplet_directory_key: local-cc-droplets
+      fog_connection:
+        provider: Local
+        local_root: /tmp
   ccng: *cc
 
   mysql_gateway:
@@ -261,6 +278,9 @@ properties:
         authorities: uaa.none
         scope: cloud_controller.read,cloud_controller.write,openid,password.write,cloud_controller.admin,scim.read,scim.write
     no_ssl: true
+    jwt:
+      verification_key: dontknow
+
   uaadb:
     db_scheme: postgresql
     address: 127.0.0.1
