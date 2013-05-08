@@ -343,7 +343,7 @@ properties:
             serialization: enable
             snapshot:
               quota: 1
-            worker_count: 5
+            worker_count: 1
           warden:
             enable: false
     mongodb:
@@ -366,7 +366,7 @@ properties:
             serialization: enable
             snapshot:
               quota: 1
-            worker_count: 5
+            worker_count: 1
           warden:
             enable: false
     rabbit:
