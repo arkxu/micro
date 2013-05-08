@@ -130,9 +130,11 @@ properties:
     db_encryption_key: "secret"
 
   ccng: *cc
+  cc_api_version: v2
 
   mysql_gateway:
     ip_route: 127.0.0.1
+    cc_api_version: v2
     token:
     supported_versions: ["5.5"]
     version_aliases:
@@ -159,6 +161,7 @@ properties:
     default_version: "2.2"
   mongodb_gateway:
     ip_route: 127.0.0.1
+    cc_api_version: v2
     token:
     supported_versions: ["1.8", "2.0"]
     version_aliases:
@@ -172,6 +175,7 @@ properties:
     max_tmp: 900
   postgresql_gateway:
     ip_route: 127.0.0.1
+    cc_api_version: v2
     admin_user: psql_admin
     admin_passwd_hash:
     token:
@@ -272,6 +276,12 @@ properties:
     databases:
     - tag: uaa
       name: uaa_ng
+  uaa_client_id: cf
+  uaa_endpoint: http://uaa.vcap.me
+  uaa_client_auth_credentials:
+    username: micro@vcap.me
+    password: micro
+
   vcap_redis:
     address: 127.0.0.1
     port: 3456
@@ -313,7 +323,7 @@ properties:
             serialization: enable
             snapshot:
               quota: 1
-            worker_count: 5
+            worker_count: 1
           warden:
             enable: false
     postgresql:
