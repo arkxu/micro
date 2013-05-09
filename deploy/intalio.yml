@@ -163,16 +163,17 @@ properties:
     ip_route: 127.0.0.1
     cc_api_version: v2
     token:
-    supported_versions: ["1.8", "2.0"]
+    supported_versions: ["2.2"]
     version_aliases:
-      current: "2.0"
-      deprecated: "1.8"
+      current: "2.2"
+    default_plan: "100"
   mongodb_node:
     ip_route: 127.0.0.1
     available_memory: 256
     supported_versions: ["2.2"]
     default_version: "2.2"
     max_tmp: 900
+    health_check_port: 2346
   postgresql_gateway:
     ip_route: 127.0.0.1
     cc_api_version: v2
